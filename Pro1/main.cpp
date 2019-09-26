@@ -128,13 +128,7 @@ int main()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-
-	unsigned int indices[] = {
-	   0, 1, 3, // first triangle
-	   1, 2, 3  // second triangle
-	};
-
-	unsigned int vao, vbo, ebo;
+	unsigned int vao, vbo;
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -142,10 +136,6 @@ int main()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -190,8 +180,15 @@ int main()
 
 	data = stbi_load("../resources/textures/awesomeface.png", &width, &height, &nrChannels, 0);
 	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	{	// .png ÊÇ¸öRGBA
+		GLenum format;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -255,7 +252,6 @@ int main()
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
 
 	glfwTerminate();
 	return 0;
