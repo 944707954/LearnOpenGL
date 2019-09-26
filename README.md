@@ -11,3 +11,6 @@ opengl32.lib;glfw3.lib
 C:\Users\94470\source\repos\LearnOpenGL\ProXX  
   
 Pro1：入门  
+  
+Pro2：光照  
+  
