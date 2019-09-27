@@ -11,6 +11,11 @@ opengl32.lib;glfw3.lib
 C:\Users\94470\source\repos\LearnOpenGL\ProXX  
   
 Pro1：入门  
+纹理，坐标系变换  
+
+Pro2：光照贴图  
+漫反射，镜面反射，放射光贴图  
   
-Pro2：光照  
+Pro3：多光源  
   
+
