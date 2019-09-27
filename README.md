@@ -18,5 +18,7 @@ Pro2：光照贴图
   
 Pro3：投光物    
 聚光灯  
+  
+Pro4：Assimp  
 
 
