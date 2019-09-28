@@ -20,5 +20,6 @@ Pro3：投光物
 聚光灯  
   
 Pro4：Assimp  
+.obj .mtl解析  
 
 
