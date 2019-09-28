@@ -86,7 +86,8 @@ private:
 		glEnableVertexAttribArray(2);
 
 		glBindVertexArray(0); //unbind
-
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
 		
 	}
 };
