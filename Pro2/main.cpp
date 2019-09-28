@@ -147,12 +147,14 @@ int main()
 
 	unsigned int diffuseMap = loadTexture("../resources/textures/container2.png");
 	unsigned int specularMap = loadTexture("../resources/textures/lighting_maps_specular_color.png");
+	unsigned int emissionMap = loadTexture("../resources/textures/matrix.jpg");
 
 	
 
 	shader.useProgram();
 	shader.setInt("material.diffuse", 0);
 	shader.setInt("material.specular", 1);
+	shader.setInt("material.emission", 2);
 
 	
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
@@ -184,7 +186,6 @@ int main()
 		shader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		shader.setVec3("light.specular", 10.0f, 10.0f, 10.0f); //为了效果明显
-
 		shader.setFloat("material.shininess", 64.0f);
 
 		
@@ -218,6 +219,8 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularMap);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, emissionMap);
 
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
