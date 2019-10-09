@@ -81,7 +81,7 @@ int main()
 	// build and compile shaders
 	// -------------------------
 	Shader shader("shaders/vertex.vs", "shaders/fragment.fs");
-	Shader shaderSingleColor("shaders/vertex.vs", "shaders/color.fs");
+	Shader shaderSingleColor("shaders/color.vs", "shaders/color.fs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -139,6 +139,7 @@ int main()
 		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 		 5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 	};
+
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -164,11 +165,11 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
 
+
 	// load textures
 	// -------------
-	unsigned int cubeTexture = loadTexture("resources/textures/marble.jpg");
-	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
-
+	unsigned int cubeTexture = loadTexture("../resources/textures/marble.jpg");
+	unsigned int floorTexture = loadTexture("../resources/textures/metal.png");
 	// shader configuration
 	// --------------------
 	shader.useProgram();
@@ -220,7 +221,6 @@ int main()
 		glStencilMask(0xFF);
 		// cubes
 		glBindVertexArray(cubeVAO);
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cubeTexture);
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		shader.setMat4("model", model);
@@ -268,6 +268,7 @@ int main()
 	glDeleteVertexArrays(1, &planeVAO);
 	glDeleteBuffers(1, &cubeVBO);
 	glDeleteBuffers(1, &planeVBO);
+	
 
 	glfwTerminate();
 	return 0;
