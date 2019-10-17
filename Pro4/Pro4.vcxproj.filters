@@ -35,6 +35,12 @@
     <None Include="shaders\vertex.vs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="shaders\fragment_t.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\vertex_t.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Libraries\Includes\learnopengl\mesh.h">

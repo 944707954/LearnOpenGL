@@ -25,7 +25,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, -5.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -65,18 +65,71 @@ int main()
 		return -1;
 	}
 
-	Shader shader("shaders/vertex.vs", "shaders/fragment.fs");
+	Shader shader("shaders/vertex_t.vs", "shaders/fragment_t.fs");
 	Shader lightShader("shaders/lamp.vs", "shaders/lamp.fs");
 
-	Model ourModel("../resources/objects/nanosuit/nanosuit.obj");
-	
-	
-	
-	
+	float vertices[] = {
+		// positions         
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
 
-	
-	
+		-0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
 
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+	};
+	unsigned int lightvao, vbo;
+	glGenVertexArrays(1, &lightvao);
+	glGenBuffers(1, &vbo);
+	glBindVertexArray(lightvao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBindVertexArray(0);
+	
+	//Model ourModel("objects/skull/12140_Skull_v3_L2.obj");
+	//Model ourModel("objects/alien/xr_chat_alien_armor_0001tt.fbx");
+	Model ourModel("objects/spider_fbx/Spider.fbx");
+	//Model ourModel("objects/nanosuit/nanosuit.obj");
+	//Model ourModel("objects/spider/spider.obj");
+
+	glm::vec3 lightPos(1.0f, 1.0f, 1.0f);
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -85,7 +138,7 @@ int main()
 
 		processInput(window);
 
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -96,11 +149,31 @@ int main()
 		shader.setMat4("projection", projection);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f));
 		shader.setMat4("model", model);
 		
+		//lightPos = glm::vec3(2.0 * sin(glfwGetTime()), 0.0f, 2.0 * cos(glfwGetTime()));
+		shader.setVec3("light.pos", lightPos);
+		shader.setVec3("viewPos", camera.Position);
+		shader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		glm::vec3 lightColor(0.7f, 0.7f, 0.7f);  //light color
+		shader.setVec3("light.diffuse", lightColor);
+		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+
 		ourModel.Draw(shader);
+
+		lightShader.useProgram();
+		lightShader.setVec3("color", lightColor);
+		lightShader.setMat4("view", view);
+		lightShader.setMat4("projection", projection);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.1f));
+		lightShader.setMat4("model", model);
+		glBindVertexArray(lightvao);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
