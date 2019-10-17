@@ -9,6 +9,7 @@ https://learnopengl-cn.github.io/
 opengl32.lib;glfw3.lib;assimp-vc142-mtd.lib    
 4.添加glad.c到文件夹，并在源文件中添加  
 C:\Users\94470\source\repos\LearnOpenGL\ProXX  
+5.若使用assimp，在目录中添加assimp-vc142-mtd.dll  
   
 Pro1：入门  
 纹理，坐标系变换  
