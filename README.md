@@ -1,7 +1,7 @@
 # LearnOpenGL
-课程网站
+课程网站：
 https://learnopengl-cn.github.io/  
-  
+我的博客：xx.net  
  VS配置  
 1.Include Directories(包含目录)：C:\Users\94470\source\repos\LearnOpenGL\Libraries\Includes  
 2.lib Directories(库目录)：C:\Users\94470\source\repos\LearnOpenGL\Libraries\Libs  
