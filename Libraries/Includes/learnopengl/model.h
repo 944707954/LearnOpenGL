@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glad/glad.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -13,12 +15,16 @@
 
 using namespace std;
 
-unsigned int TextureFromFile(const char* path, const string& directory);
-
+unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
 class Model {
 public:
-	Model(const char* path)
+	vector<Texture> textures_loaded;
+	vector<Mesh> meshes;
+	string directory;
+	bool gammaCorrection;
+
+	Model(const char* path, bool gamma = false):gammaCorrection(gamma)
 	{
 		loadModel(path);
 	}
@@ -32,13 +38,11 @@ public:
 	}
 
 private:
-	vector<Texture> textures_loaded;
-	vector<Mesh> meshes;
-	string directory;
+	
 	void loadModel(string path)
 	{
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 		{
 			cout << "error:assimp " << importer.GetErrorString() << endl;
@@ -91,13 +95,21 @@ private:
 				tmp2.x = mesh->mTextureCoords[0][i].x;
 				tmp2.y = mesh->mTextureCoords[0][i].y;
 				vertex.TexCoords = tmp2;
-
 			}
 			else
 			{
 				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 			}
-		
+			tmp.x = mesh->mTangents[i].x;
+			tmp.y = mesh->mTangents[i].y;
+			tmp.z = mesh->mTangents[i].z;
+			vertex.Tangent = tmp;
+
+			tmp.x = mesh->mBitangents[i].x;
+			tmp.y = mesh->mBitangents[i].y;
+			tmp.z = mesh->mBitangents[i].z;
+			vertex.Bitangent = tmp;
+
 			vertices.push_back(vertex);
 		}
 		//indices
@@ -111,34 +123,30 @@ private:
 		}
 		//texture
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		Material mat;
-		aiColor3D color;
-		material->Get(AI_MATKEY_COLOR_AMBIENT, color);
-		mat.Ka = glm::vec4(color.r, color.g, color.b, 1.0);
-		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-		mat.Kd = glm::vec4(color.r, color.g, color.b, 1.0);
-		material->Get(AI_MATKEY_COLOR_SPECULAR, color);
-		mat.Ks = glm::vec4(color.r, color.g, color.b, 1.0);
+		
+		//not use
+		Material mat = loadMaterial(material);
 
 		cout << "MaterialIndex: " << mesh->mMaterialIndex << endl;
-		//if (mesh->mMaterialIndex >= 0)
-		//{
-		//	vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "diffuseMap");
-		//	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		//	vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "specularMap");
-		//	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-		//	//vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "normalMap");
-		//	//textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-		//	//vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "heightMap");
-		//	//textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-		//}
-
-		vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "diffuseMap");
+		
+		//if (mesh->mMaterialIndex >= 0){ }
+		// 1. diffuse maps
+		vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "specularMap");
+		// 2. specular maps
+		vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
-		cout << "one mesh: " << endl;
+		//.obj need use aiTextureType_HEIGHT to load normalMaps
+		// 3. normal maps
+		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		// 4. height maps
+		//std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+		//textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+		// 5. reflect maps store in ambient
+		std::vector<Texture> reflectMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflect");
+		textures.insert(textures.end(), reflectMaps.begin(), reflectMaps.end());
+		cout << "mesh: " << endl;
 		cout << "vertices size: " << vertices.size() << endl;
 		cout << "indices size: " << indices.size() << endl;
 		cout << "texture size: " << textures.size() << endl << endl;
@@ -146,6 +154,21 @@ private:
 		return Mesh(vertices, indices, textures, mat);
 	}
 
+	Material loadMaterial(aiMaterial *mat)
+	{
+		Material material;
+		aiColor3D color(0.0f, 0.0f, 0.0f);
+		float shininess;
+		mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+		material.Ambient = glm::vec3(color.r, color.g, color.b);
+		mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		material.Diffuse = glm::vec3(color.r, color.g, color.b);
+		mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+		material.Specular = glm::vec3(color.r, color.g, color.b);
+		mat->Get(AI_MATKEY_SHININESS, shininess);
+		material.Shininess = shininess;
+		return material;
+	}
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
 	{
 		vector<Texture> textures;
@@ -153,8 +176,10 @@ private:
 		cout << "texture_" << typeName << ": " << material->GetTextureCount(type) << endl;
 		for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 		{
+			
 			aiString str;
 			material->GetTexture(type, i, &str);
+			cout << str.C_Str() << endl;
 			bool skip = false;
 			for (int j = 0; j < textures_loaded.size(); j++)
 			{
@@ -173,18 +198,19 @@ private:
 				texture.path = str.C_Str();
 				textures.push_back(texture);
 				textures_loaded.push_back(texture);
+
 			}
 		}
 		return textures;
 	}
+	
 };
 
 
-unsigned int TextureFromFile(const char* path, const string& directory)
+unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
 {
 	string filename = string(path);
 	filename = directory + '/' + filename;
-	cout << filename << endl;
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
@@ -194,12 +220,20 @@ unsigned int TextureFromFile(const char* path, const string& directory)
 	{
 		GLenum format;
 		if (nrComponents == 1)
+		{
 			format = GL_RED;
+		}
 		else if (nrComponents == 3)
+		{
 			format = GL_RGB;
+			cout << "format = GL_RGB" << endl;
+		}
 		else if (nrComponents == 4)
+		{
 			format = GL_RGBA;
-
+			cout << "format = GL_RGBA" << endl;
+		}
+		
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);

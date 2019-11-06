@@ -48,7 +48,9 @@ void main()
     for(int i = 0; i < 9; i++){
 		color += kernel[i] * sampleTex[i];
 	}
-	FragColor = vec4(color, 1.0);
-	
+	//FragColor = vec4(color, 1.0);
+	FragColor = texture(screenTexture, TexCoords);
+    float average = (FragColor.r + FragColor.g + FragColor.b) / 3.0;
+    FragColor = vec4(average, average, average, 1.0);
    
 } 

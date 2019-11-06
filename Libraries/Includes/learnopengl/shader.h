@@ -108,13 +108,29 @@ public:
 	{
 		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 	}
+	void setVec2(const std::string& name, const glm::vec2& value) const
+	{
+		glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
+	void setVec2(const std::string& name, float x, float y) const
+	{
+		glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+	}
+	void setVec3(const std::string& name, const glm::vec3& value) const
+	{
+		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
 	void setVec3(const std::string& name, float x, float y, float z) const
 	{
 		glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 	}
-	void setVec3(const std::string& name, const glm::vec3 &value) const
+	void setVec4(const std::string& name, const glm::vec4& value) const
 	{
-		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+		glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
+	void setVec4(const std::string& name, float x, float y, float z, float w)
+	{
+		glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 	}
 	void setMat4(const std::string& name, const glm::mat4 &mat) const
 	{
@@ -123,51 +139,27 @@ public:
 
 private:
 
-	
-
 	void checkCompileErrors(GLuint shader, std::string type)
 	{
-		int sucess;
-		char infoLog[512];
-		if (type == "VERTEX")
+		GLint success;
+		GLchar infoLog[1024];
+		if (type != "PROGRAM")
 		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &sucess);
-			if (!sucess)
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+			if (!success)
 			{
-				glGetShaderInfoLog(shader, 512, NULL, infoLog);
-				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-			}
-		}
-		else if (type == "FRAGMENT")
-		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &sucess);
-			if (!sucess)
-			{
-				glGetShaderInfoLog(shader, 512, NULL, infoLog);
-				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-			}
-		}
-		else if (type == "GEOMETRY")
-		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &sucess);
-			if (!sucess)
-			{
-				glGetShaderInfoLog(shader, 512, NULL, infoLog);
-				std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
-			}
-		}
-		else if (type == "PROGRAM")
-		{
-			glGetShaderiv(shader, GL_LINK_STATUS, &sucess);
-			if (!sucess)
-			{
-				glGetProgramInfoLog(shader, 512, NULL, infoLog);
-				std::cout << "ERROR::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
+				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << std::endl;
 			}
 		}
 		else
 		{
-
+			glGetProgramiv(shader, GL_LINK_STATUS, &success);
+			if (!success)
+			{
+				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << std::endl;
+			}
 		}
 	}
 };

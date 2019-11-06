@@ -131,12 +131,20 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment.fs" />
-    <None Include="shaders\fragment_t.fs" />
+    <None Include="shaders\normal_map.fs" />
     <None Include="shaders\lamp.fs" />
     <None Include="shaders\lamp.vs" />
-    <None Include="shaders\vertex.vs" />
-    <None Include="shaders\vertex_t.vs" />
+    <None Include="shaders\texture.fs" />
+    <None Include="shaders\texture.vs" />
+    <None Include="shaders\no_texture.fs" />
+    <None Include="shaders\no_texture.vs" />
+    <None Include="shaders\normal_map.vs" />
+    <None Include="shaders\texture_light.fs" />
+    <None Include="shaders\texture_light.vs" />
+    <None Include="shaders\tt.fs" />
+    <None Include="shaders\tt.vs" />
+    <None Include="shaders\tt_light.fs" />
+    <None Include="shaders\tt_light.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Libraries\Includes\learnopengl\mesh.h" />

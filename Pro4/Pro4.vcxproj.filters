@@ -23,22 +23,46 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment.fs">
-      <Filter>资源文件</Filter>
-    </None>
     <None Include="shaders\lamp.fs">
       <Filter>资源文件</Filter>
     </None>
     <None Include="shaders\lamp.vs">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="shaders\vertex.vs">
+    <None Include="shaders\normal_map.fs">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="shaders\fragment_t.fs">
+    <None Include="shaders\normal_map.vs">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="shaders\vertex_t.vs">
+    <None Include="shaders\no_texture.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\no_texture.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\texture.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\texture.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\texture_light.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\texture_light.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\tt.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\tt.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\tt_light.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shaders\tt_light.fs">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
