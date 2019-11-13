@@ -81,7 +81,7 @@ public:
 			}
 			shader.useProgram();
 			shader.setInt(type + n, i);
-			//glActiveTexture(0 + i)
+			//glActiveTexture(0 + i) wrong
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
@@ -95,6 +95,10 @@ public:
 		shader.setVec3("material.Diffuse", mat.Diffuse);
 		shader.setVec3("material.Specular", mat.Specular);
 		shader.setFloat("material.Shininess", mat.Shininess);
+	}
+	unsigned int getVAO()
+	{
+		return vao;
 	}
 private:
 	unsigned int vao, vbo, ebo;
