@@ -10,6 +10,7 @@ void main()
 	vec4 color = texture(texture_diffuse1, TexCoords);
 	if(color.a < 0.1)
 		discard;
-	FragColor = color;
+	float gamma = 2.2;
+	FragColor = vec4(pow(color.rgb, vec3(1.0/gamma)), 1.0);
 	
 }

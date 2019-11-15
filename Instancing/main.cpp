@@ -24,7 +24,7 @@ const unsigned int SCR_HEIGHT = 720;
 
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 55.0f));
+Camera camera(glm::vec3(0.0f, 30.0f, 255.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -125,7 +125,7 @@ int main()
 		defaultShader.setVec2(offi, offset[i]);
 	}*/
 
-	unsigned int num = 20000;
+	unsigned int num = 100000;
 	glm::mat4* modelMatrix = new glm::mat4[num];
 	srand(glfwGetTime());
 	float radius = 150.0;
@@ -194,12 +194,6 @@ int main()
 		planetShader.useProgram();
 		planetShader.setMat4("projection", projection);
 		planetShader.setMat4("view", view);
-
-		rockShader.useProgram();
-		rockShader.setMat4("projection", projection);
-		rockShader.setMat4("view", view);
-		
-		planetShader.useProgram();
 		glm::mat4 model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0, -3.0, 0.0));
 		model = glm::scale(model, glm::vec3(4.0));
@@ -207,6 +201,8 @@ int main()
 		planetModel.Draw(planetShader);
 
 		rockShader.useProgram();
+		rockShader.setMat4("projection", projection);
+		rockShader.setMat4("view", view);
 		rockShader.setInt("texture_diffuse1", 0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, rockModel.textures_loaded[0].id);
