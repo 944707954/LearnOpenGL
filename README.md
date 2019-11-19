@@ -10,9 +10,9 @@
 
 - 我的VS配置：
 
-  1. Include Directories(包含目录)：C:\Users\94470\source\repos\LearnOpenGL\Libraries\Includes
+  1. Include Directories(包含目录)：$(ProjectDir)\Libraries\include
 
-  2. lib Directories(库目录)：C:\Users\94470\source\repos\LearnOpenGL\Libraries\Libs
+  2. lib Directories(库目录)：$(ProjectDir)\Libraries\lib
 
   3. Linker(链接器)-Input(输入)-Additional Dependencies(附加依赖项)：
 
@@ -28,12 +28,20 @@
 
 - 目录
 
-  1. Pro1
-  2. Pro2
-  3. Pro3
-  4. Pro4
-  5. Pro5
-  6. Pro6
-  7. Pro7
-  8. Pro8
+  - 1_HelloWindow
+  - 2_1_LightingMaps
+  - 2_2_LightCaster
+  - 3_Assimp
+  - 4_1_StencilTesting
+  - 4_2_Blending
+  - 4_2_Blending_Faceculling
+  - 4_3_FrameBuffer
+  - 4_4_Skybox
+  - 4_5_AdvancedGLSL
+  - 4_6_GeometryShader
+  - 4_7_Instancing
+  - 4_8_AntiAliasing
+  - 5_1_BlinnPhong
+  - 5_2_GammaCorrection
+  - 5_3_ShadowMapping
 
