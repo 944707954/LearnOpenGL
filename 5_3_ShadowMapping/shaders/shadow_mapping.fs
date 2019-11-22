@@ -21,8 +21,20 @@ float calShadow(vec4 FragPosLightSpace, vec3 normal, vec3 dirToLight)
 	pos = pos * 0.5 + 0.5;
 	float minDepth = texture(depthMap, pos.xy).r;
 	float depth = pos.z;
+	if(depth > 1.0)
+		return 0.0;
 	float bias = max(0.05 * (1.0 - dot(normal, dirToLight)), 0.005);
-	return depth - bias < minDepth ? 0.0 : 1.0;
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(depthMap, 0);
+	for(int i = -1; i <= 1; i++)
+	{
+		for(int j = -1; j <= 1; j++)
+		{
+			float pcf = texture(depthMap, pos.xy + vec2(i, j) * texelSize).r;
+			shadow += depth - bias < pcf ? 0.0 : 1.0;
+		}
+	}
+	return shadow / 9.0 ;
 }
 
 void main()
@@ -31,7 +43,7 @@ void main()
 	vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
 	vec3 lightColor = vec3(1.0);
 	//ambient
-	vec3 ambient = 0.15 * color;
+	vec3 ambient = 0.1 * lightColor;
 	//diffuse
 	vec3 dirToLight = normalize(lightPos - fs_in.FragPos);
 	float diff = max(dot(dirToLight, normal), 0.0);
@@ -44,7 +56,6 @@ void main()
 	//result
 	float shadow = calShadow(fs_in.FragPosLightSpace, normal, dirToLight);
 	vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
-
 
 	FragColor = vec4(result, 1.0);
 }
