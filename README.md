@@ -28,20 +28,3 @@
 
 - 目录
 
-  - 1_HelloWindow
-  - 2_1_LightingMaps
-  - 2_2_LightCaster
-  - 3_Assimp
-  - 4_1_StencilTesting
-  - 4_2_Blending
-  - 4_2_Blending_Faceculling
-  - 4_3_FrameBuffer
-  - 4_4_Skybox
-  - 4_5_AdvancedGLSL
-  - 4_6_GeometryShader
-  - 4_7_Instancing
-  - 4_8_AntiAliasing
-  - 5_1_BlinnPhong
-  - 5_2_GammaCorrection
-  - 5_3_ShadowMapping
-
