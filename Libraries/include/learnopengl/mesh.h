@@ -8,7 +8,8 @@
 
 #include <learnopengl/shader.h>
 
-using namespace std;
+using std::vector;
+using std::string;
 
 struct Vertex
 {

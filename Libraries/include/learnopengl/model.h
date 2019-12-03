@@ -8,9 +8,9 @@
 #include <assimp/postprocess.h>
 
 #include <learnopengl/mesh.h>
-#include <iostream>
-#include <vector>
-using namespace std;
+
+using std::cout;
+using std::endl;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
