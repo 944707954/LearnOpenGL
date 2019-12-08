@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{5388EF27-4FE2-4FE1-8501-112FFA5010A2}</ProjectGuid>
-    <RootNamespace>t</RootNamespace>
+    <ProjectGuid>{440C508B-092B-43A8-8758-BDDF7856844C}</ProjectGuid>
+    <RootNamespace>My72Breakout</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,11 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="t.h" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="resource_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="h.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="resource_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
